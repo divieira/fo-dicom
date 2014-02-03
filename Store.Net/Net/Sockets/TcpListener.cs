@@ -67,7 +67,14 @@ namespace System.Net.Sockets
 
 		public void Stop()
 		{
-			_listener.ConnectionReceived -= OnConnectionReceived;
+            try
+            {
+                _listener.ConnectionReceived -= OnConnectionReceived;
+            }
+            catch (InvalidOperationException)
+            {
+                //TODO: Find out why this exception is thrown
+            }
 			_listener.Dispose();
 		}
 
