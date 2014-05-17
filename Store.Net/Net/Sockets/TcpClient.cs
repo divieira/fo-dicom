@@ -147,7 +147,8 @@ namespace System.Net.Sockets
 				}
 				catch (Exception e)
 				{
-					throw new IOException("Socket write failure.", e.InnerException ?? e);
+                    //FIXME: Find out why this exception happens and stop ignoring it
+                    //throw new IOException("Socket write failure.", e.InnerException ?? e);
 				}
 			}
 
