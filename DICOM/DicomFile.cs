@@ -148,11 +148,15 @@ namespace Dicom {
 			}
 		}
 
-        public static DicomFile Open(Stream stream)
+        public static DicomFile Open(Stream stream, string fileName = null)
         {
             var df = new DicomFile();
 
 			try {
+
+                if (fileName != null)
+                    df.File = new FileReference(fileName);
+
 				var source = new StreamByteSource(stream);
 
 				var reader = new DicomFileReader();
