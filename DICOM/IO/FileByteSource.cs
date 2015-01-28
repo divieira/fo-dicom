@@ -24,7 +24,7 @@ namespace Dicom.IO {
 			_reader = EndianBinaryReader.Create(_stream, _endian);
 			_mark = 0;
 
-			_largeObjectSize = 64 * 1024;
+			_largeObjectSize = 512 * 1024;
 
 			_milestones = new Stack<long>();
 			_lock = new object();
