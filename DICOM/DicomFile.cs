@@ -52,7 +52,7 @@ namespace Dicom {
 			}
 
 			File = new FileReference(fileName);
-			File.Delete();
+			//File.Delete();
 
 			OnSave();
 
@@ -132,7 +132,8 @@ namespace Dicom {
 				df.File = new FileReference(fileName);
 
 				using (var source = new FileByteSource(df.File)) {
-					DicomFileReader reader = new DicomFileReader();
+
+					var reader = new DicomFileReader();
 					reader.Read(source,
 						new DicomDatasetReaderObserver(df.FileMetaInfo),
 						new DicomDatasetReaderObserver(df.Dataset));
