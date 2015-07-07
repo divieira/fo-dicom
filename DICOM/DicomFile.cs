@@ -51,8 +51,9 @@ namespace Dicom {
 				FileMetaInfo = new DicomFileMetaInformation(Dataset);
 			}
 
+            //Deletes a file with the passed name so we can overwrite
 			File = new FileReference(fileName);
-			//File.Delete();
+			File.Delete();
 
 			OnSave();
 
@@ -125,15 +126,20 @@ namespace Dicom {
 				throw eventResult.InternalState as Exception;
 		}
 
-		public static DicomFile Open(string fileName) {
+		public static DicomFile Open(string fileName, bool forceMemoryBuffer=false) {
 			DicomFile df = new DicomFile();
 
 			try {
 				df.File = new FileReference(fileName);
 
 				using (var source = new FileByteSource(df.File)) {
+                    //This forces all of the data elements to be kept as memory, as
+                    //opposed to being kept as open file stream handles. We
+                    //need this since we won't be able to read the file once
+                    //we start writing to it
+                    if (forceMemoryBuffer) source.LargeObjectSize = Int32.MaxValue;
 
-					var reader = new DicomFileReader();
+					DicomFileReader reader = new DicomFileReader();
 					reader.Read(source,
 						new DicomDatasetReaderObserver(df.FileMetaInfo),
 						new DicomDatasetReaderObserver(df.Dataset));
@@ -149,16 +155,19 @@ namespace Dicom {
 			}
 		}
 
-        public static DicomFile Open(Stream stream, string fileName = null)
+        public static DicomFile Open(Stream stream, bool forceMemoryBuffer = false)
         {
             var df = new DicomFile();
 
 			try {
 
-                if (fileName != null)
-                    df.File = new FileReference(fileName);
-
 				var source = new StreamByteSource(stream);
+
+                //This forces all of the data elements to be kept as memory, as
+                //opposed to being kept as open file stream handles. We
+                //need this since we won't be able to read the file once
+                //we start writing to it
+                if (forceMemoryBuffer) source.LargeObjectSize = Int32.MaxValue;
 
 				var reader = new DicomFileReader();
 				reader.Read(source,
