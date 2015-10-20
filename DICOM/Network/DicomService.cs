@@ -293,11 +293,7 @@ namespace Dicom.Network {
 								file.FileMetaInfo.ImplementationVersionName = Association.RemoteImplementationVersion;
 								file.FileMetaInfo.SourceApplicationEntityTitle = Association.CallingAE;
 
-								var fileName = TemporaryFile.Create();
-
-								file.Save(fileName);
-
-								_dimseStream = File.OpenWrite(fileName);
+                                _dimseStream = File.OpenWrite(TemporaryFile.Create());
 								_dimseStream.Seek(0, SeekOrigin.End);
 							} else {
 								_dimseStream = new MemoryStream();
